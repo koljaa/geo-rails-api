@@ -83,3 +83,5 @@ production:
   database: gisonrails_production
   username: gisonrails
   password: <%= ENV['GISONRAILS_DATABASE_PASSWORD'] %>
+  schema_search_path: public, postgis
+  url: <%= ENV.fetch('DATABASE_URL', '').sub(/^postgres/, "postgis") %>
