@@ -1,44 +1,60 @@
-* Install postgres brew install postgresql
- - Link issue https://stackoverflow.com/questions/27700596/homebrew-postgres-broken
+# Install postgres brew install postgresql
 
-* create rails app rails new gisonrails --api --database=postgresql
+Link issue https://stackoverflow.com/questions/27700596/homebrew-postgres-broken
 
-* .ruby-version .ruby-gemset
+# Install PostGis
 
-* gem install bundler
+brew install postgis
 
-* brew install postgis
+# Create a rails api only app
 
-* add gem 'activerecord-postgis-adapter'
+create rails app rails new gisonrails --api --database=postgresql
 
-* create database rake db:create
+# Set the ruby-version and gemset
 
-* psql database => database=# CREATE EXTENSION postgis;
+.ruby-version .ruby-gemset
 
-* create place model and controller
-	Migration example: 
+# Install Bundler and add required gems to gemfile 
+
+gem install bundler
+add gem 'activerecord-postgis-adapter' in your gemfile
+
+# Create the databases locally and enable PostGis extension
+
+create database rake db:create
+psql database => database=# CREATE EXTENSION postgis;
+
+# Build your API. For example start with a places endpoint.
+
+Example migration with geo enable field lonlat:
+
 	class CreatePlaces < ActiveRecord::Migration[5.1]
 	  def change
 	    create_table :places do |t|
 	      t.string :name
 	      t.st_point :lonlat, geographic: true
-
 	      t.timestamps
 	    end
 	  end
 	end
 
-* Test your endpoint 
-	curl -X POST -H "Content-Type: application/json" "localhost:3000/places" -d '{"name": "test2", "lonlat": "POINT(53.551086 9.993682)"}'
+# Test your endpoint 
 
-* download heroku cli and inititalize project
-	https://devcenter.heroku.com/articles/getting-started-with-rails4
+	curl -X POST -H "Content-Type: application/json" "localhost:3000/places" -d '{"name": "test2", "lonlat": 		"POINT(53.551086 9.993682)"}'
 
-* add postgis addon
+# Prepare deployment on Heroku
+
+##Download heroku cli tool and inititalize project
+
+https://devcenter.heroku.com/articles/getting-started-with-rails4
+
+## Add postgis addon
+
 	$ heroku pg:psql
 	create extension postgis;
 
-* configure database.yml to work with postgis on heroku
+##Cconfigure database.yml to work with postgis on heroku
+
 	production:
 	  <<: *default
 	  database: gisonrails_production
@@ -47,5 +63,5 @@
 	  schema_search_path: public, postgis
   	  url: <%= ENV.fetch('DATABASE_URL', '').sub(/^postgres/, "postgis") %>
 
-	https://stackoverflow.com/questions/32710406/enabling-ruby-postgis-support-on-heroku
+https://stackoverflow.com/questions/32710406/enabling-ruby-postgis-support-on-heroku
 
