@@ -16,8 +16,11 @@ create rails app rails new gisonrails --api --database=postgresql
 
 # Install Bundler and add required gems to gemfile 
 
-gem install bundler
-add gem 'activerecord-postgis-adapter' in your gemfile
+	gem install bundler
+
+Add activerecord-postgis-adapter in your gemfile. https://github.com/rgeo/activerecord-postgis-adapter
+
+	gem 'activerecord-postgis-adapter' 
 
 # Create the databases locally and enable PostGis extension
 
